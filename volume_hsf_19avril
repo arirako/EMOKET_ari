@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Définition du motif des fichiers à traiter
+FILE_PATTERN="*T1w_*_hippocampus_seg_crop.nii.gz"
+
+# Chemin du dossier où les fichiers sont stockés
+INPUT_DIR="/volatile/ar278096/EMOKET/derivates/output_19avril"
+
+# Chemin du script Python à exécuter
+PYTHON_SCRIPT="/volatile/ar278096/EMOKET/code/volume.py"
+
+# Chemin du fichier CSV de sortie
+OUTPUT_CSV="/volatile/ar278096/EMOKET/derivates/volumes.csv"
+
+# Créer ou vider le fichier CSV existant
+echo "filename,volume" > "$OUTPUT_CSV"
+
+# Boucle sur tous les fichiers correspondant au motif dans le répertoire
+find "$INPUT_DIR" -name "$FILE_PATTERN" | while read filename; do
+  # Exécuter le script Python sur le fichier et stocker la sortie
+  volume=$(python "$PYTHON_SCRIPT" "$filename")
+  
+  # Ajouter la sortie au fichier CSV
+  echo "$filename,$volume" >> "$OUTPUT_CSV"
+done
+
